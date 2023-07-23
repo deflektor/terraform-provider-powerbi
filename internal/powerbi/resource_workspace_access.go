@@ -170,10 +170,10 @@ func updateGroupUser(d *schema.ResourceData, meta interface{}) error {
 	if d.HasChange("group_user_access_right") {
 		err := client.UpdateGroupUser(groupID, powerbiapi.UpdateGroupUserRequest{
 			GroupUserAccessRight: d.Get("group_user_access_right").(string),
-			DisplayName:          d.Get("display_name").(string),
-			PrincipalType:        d.Get("principal_type").(string),
-			EmailAddress:         d.Get("email_address").(string),
-			Identifier:           d.Get("identifier").(string),
+			//DisplayName:          d.Get("display_name").(string),
+			//PrincipalType:        d.Get("principal_type").(string),
+			EmailAddress: d.Get("email_address").(string),
+			//Identifier:           d.Get("identifier").(string),
 		})
 		if err != nil {
 			return err

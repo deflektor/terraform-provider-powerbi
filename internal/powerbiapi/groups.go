@@ -30,6 +30,8 @@ type GetGroupsResponseItem struct {
 	IsOnDedicatedCapacity bool
 	Name                  string
 	CapacityID            string
+	IsReadOnly            bool
+	dataflowStorageId     string
 }
 
 // GetGroupResponse represents the details when getting an individual group
@@ -38,14 +40,16 @@ type GetGroupResponse struct {
 	IsOnDedicatedCapacity bool
 	Name                  string
 	CapacityID            string
+	IsReadOnly            bool
+	dataflowStorageId     string
 }
 
-//GetGroupUsersResponse represents list of users that have access to the specified workspace.
+// GetGroupUsersResponse represents list of users that have access to the specified workspace.
 type GetGroupUsersResponse struct {
 	Value []GetGroupUsersResponseItem
 }
 
-//GetGroupUsersResponseItem represents a single user details.
+// GetGroupUsersResponseItem represents a single user details.
 type GetGroupUsersResponseItem struct {
 	DisplayName          string
 	EmailAddress         string
@@ -54,7 +58,7 @@ type GetGroupUsersResponseItem struct {
 	PrincipalType        string
 }
 
-//AddGroupUserRequest represents details when adding a group user.
+// AddGroupUserRequest represents details when adding a group user.
 type AddGroupUserRequest struct {
 	DisplayName          string `json:"displayName"`
 	EmailAddress         string `json:"emailAddress"`
@@ -63,7 +67,7 @@ type AddGroupUserRequest struct {
 	PrincipalType        string `json:"principalType"`
 }
 
-//UpdateGroupUserRequest represents details when updating a group user.
+// UpdateGroupUserRequest represents details when updating a group user.
 type UpdateGroupUserRequest struct {
 	DisplayName          string `json:"displayName"`
 	EmailAddress         string `json:"emailAddress"`
@@ -121,6 +125,8 @@ func (client *Client) GetGroup(groupID string) (*GetGroupResponse, error) {
 		IsOnDedicatedCapacity: singleGroup.IsOnDedicatedCapacity,
 		Name:                  singleGroup.Name,
 		CapacityID:            singleGroup.CapacityID,
+		IsReadOnly:            singleGroup.IsReadOnly,
+		dataflowStorageId:     singleGroup.dataflowStorageId,
 	}, nil
 }
 
@@ -145,6 +151,8 @@ func (client *Client) GetGroupByName(groupName string) (*GetGroupResponse, error
 		IsOnDedicatedCapacity: singleGroup.IsOnDedicatedCapacity,
 		Name:                  singleGroup.Name,
 		CapacityID:            singleGroup.CapacityID,
+		IsReadOnly:            singleGroup.IsReadOnly,
+		dataflowStorageId:     singleGroup.dataflowStorageId,
 	}, nil
 }
 
@@ -154,7 +162,7 @@ func (client *Client) DeleteGroup(groupID string) error {
 	return client.doJSON("DELETE", url, nil, nil)
 }
 
-//GetGroupUsers Returns a list of users that have access to the specified workspace.
+// GetGroupUsers Returns a list of users that have access to the specified workspace.
 func (client *Client) GetGroupUsers(groupID string) (*GetGroupUsersResponse, error) {
 
 	var respObj GetGroupUsersResponse
@@ -164,7 +172,7 @@ func (client *Client) GetGroupUsers(groupID string) (*GetGroupUsersResponse, err
 	return &respObj, err
 }
 
-//AddGroupUser Grants the specified user permissions to the specified workspace.
+// AddGroupUser Grants the specified user permissions to the specified workspace.
 func (client *Client) AddGroupUser(groupID string, request AddGroupUserRequest) error {
 	url := fmt.Sprintf("https://api.powerbi.com/v1.0/myorg/groups/%s/users", url.PathEscape(groupID))
 	err := client.doJSON("POST", url, &request, nil)
@@ -172,7 +180,7 @@ func (client *Client) AddGroupUser(groupID string, request AddGroupUserRequest) 
 	return err
 }
 
-//UpdateGroupUser Update the specified user permissions to the specified workspace.
+// UpdateGroupUser Update the specified user permissions to the specified workspace.
 func (client *Client) UpdateGroupUser(groupID string, request UpdateGroupUserRequest) error {
 	url := fmt.Sprintf("https://api.powerbi.com/v1.0/myorg/groups/%s/users", url.PathEscape(groupID))
 	err := client.doJSON("PUT", url, &request, nil)
@@ -180,7 +188,7 @@ func (client *Client) UpdateGroupUser(groupID string, request UpdateGroupUserReq
 	return err
 }
 
-//DeleteUserInGroup Deletes the specified user permissions from the specified workspace.
+// DeleteUserInGroup Deletes the specified user permissions from the specified workspace.
 func (client *Client) DeleteUserInGroup(groupID string, userInfo string) error {
 	url := fmt.Sprintf("https://api.powerbi.com/v1.0/myorg/groups/%s/users/%s", url.PathEscape(groupID), url.PathEscape(userInfo))
 	err := client.doJSON("DELETE", url, nil, nil)

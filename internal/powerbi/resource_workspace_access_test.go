@@ -152,8 +152,9 @@ func TestAccWorkspaceAccess_skew(t *testing.T) {
 				PreConfig: func() {
 					client := testAccProvider.Meta().(*powerbiapi.Client)
 					client.UpdateGroupUser(groupID, powerbiapi.UpdateGroupUserRequest{
-						Identifier:           secondaryUsername,
-						PrincipalType:        "User",
+						//Identifier:           secondaryUsername,
+						//PrincipalType:        "User",
+						EmailAddress:         "%s",
 						GroupUserAccessRight: "Member",
 					})
 					client.RefreshUserPermissions()
